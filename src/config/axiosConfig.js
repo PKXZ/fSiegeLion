@@ -43,6 +43,7 @@ axios.interceptors.response.use(
             message: errorCode + '错误',
             description: errorMessage
           });
+          console.log(errorCode + '错误');
           break;
         case 401: // token未授权或token授权失败
           router.push({

@@ -1,5 +1,74 @@
 /*登录界面css*/
-p{
-  font-weight: bold;
-  color: red;
+.mainContent{
+  background: #F8FAFE;
+  margin:0 auto;
+  position: absolute;
+}
+.loginImg{
+  width: 370px;
+  height: 370px;
+  position:absolute;
+  top:50%;
+  margin-top: -370px / 2;
+}
+.loginBox{
+  width: 500px;
+  height: auto;
+  margin:  0 auto;
+  margin-top: 10%;
+  .loginName{
+    font-weight: bold;
+    text-align: center;
+     i{
+      color: @commonBlue;
+      font-size: 40px;
+       margin-top: 5px;
+       margin-right: 5px;
+    }
+     span{
+      color: #333;
+      font-size: 30px;
+    }
+  }
+  .loginDescipt{
+    display: block;
+    color: @commonGray;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  .loginTabs{
+    .ant-tabs-bar{
+      border: none;
+      text-align: center;
+    }
+    .passwordForm{
+        width: 350px;
+        max-width: 350px;
+        margin: 0 auto;
+      .login-form-forgot {
+        float: right;
+      }
+      .login-form-button {
+        width: 100%;
+      }
+    }
+    .loginOther{
+      display: inline-block;
+      label{
+        margin-right: 10px;
+      }
+      i{
+        color: @commonBlue;
+        margin-right: 10px;
+        font-size: 26px;
+        cursor: pointer;
+      }
+    }
+    .registerLabel{
+      float: right;
+      color: @commonBlue;
+    }
+  }
 }

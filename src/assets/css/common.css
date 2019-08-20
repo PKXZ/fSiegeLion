@@ -1,16 +1,16 @@
-/*@charset "utf-8";
-
-@mixin FullScreen{
+@charset "UTF-8";
+.mixin-fullScreen {
   width: 100%;
   height: 100%;
 }
-@mixin omit{
+.mixin-omit {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}*/
+}
 #app {
-  @include FullScreen;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 * {
@@ -19,9 +19,12 @@
   margin: 0;
   padding: 0;
 }
-/*html,body{
-@include FullScreen;
-}*/
+html,
+body,
+.mainContent {
+  width: 100%;
+  height: 100%;
+}
 ul {
   list-style: none;
 }
@@ -34,8 +37,144 @@ a {
 .fr {
   float: right;
 }
+.footer {
+  margin: 0 auto;
+  color: #00000073;
+  width: 200px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  margin-left: -100px;
+}
+.footer .ant-col-8,
+.footer .ant-col-24 {
+  text-align: center;
+}
 /*登录界面css*/
-p {
+.mainContent {
+  background: #F8FAFE;
+  margin: 0 auto;
+  position: absolute;
+}
+.loginImg {
+  width: 370px;
+  height: 370px;
+  position: absolute;
+  top: 50%;
+  margin-top: -185px;
+}
+.loginBox {
+  width: 500px;
+  height: auto;
+  margin: 0 auto;
+  margin-top: 10%;
+}
+.loginBox .loginName {
   font-weight: bold;
-  color: red;
+  text-align: center;
+}
+.loginBox .loginName i {
+  color: #1890FF;
+  font-size: 40px;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+.loginBox .loginName span {
+  color: #333;
+  font-size: 30px;
+}
+.loginBox .loginDescipt {
+  display: block;
+  color: #00000073;
+  font-size: 14px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.loginBox .loginTabs .ant-tabs-bar {
+  border: none;
+  text-align: center;
+}
+.loginBox .loginTabs .passwordForm {
+  width: 350px;
+  max-width: 350px;
+  margin: 0 auto;
+}
+.loginBox .loginTabs .passwordForm .login-form-forgot {
+  float: right;
+}
+.loginBox .loginTabs .passwordForm .login-form-button {
+  width: 100%;
+}
+.loginBox .loginTabs .loginOther {
+  display: inline-block;
+}
+.loginBox .loginTabs .loginOther label {
+  margin-right: 10px;
+}
+.loginBox .loginTabs .loginOther i {
+  color: #1890FF;
+  margin-right: 10px;
+  font-size: 26px;
+  cursor: pointer;
+}
+.loginBox .loginTabs .registerLabel {
+  float: right;
+  color: #1890FF;
+}
+.registerForm {
+  width: 400px !important;
+  max-width: 400px !important;
+}
+.registerForm .registerRow .ant-col-10 {
+  text-align: right;
+}
+.registerForm .registerRow .ant-col-10 a {
+  color: #1890FF;
+}
+.mainContent .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.mainContent .trigger:hover {
+  color: #1890ff;
+}
+.mainContent .headers {
+  background: #fff;
+  padding: 0;
+}
+.mainContent .contents {
+  margin: 24px 16px;
+  padding: 24px;
+  background: #fff;
+  minHeight: 280px;
+}
+.mainContent .logo {
+  margin: 0 10px;
+  color: #fff;
+  text-align: center;
+}
+.mainContent .logo i {
+  font-size: 40px;
+  color: #1890FF;
+}
+.mainContent .logo span {
+  font-size: 22px;
+  font-weight: bold;
+}
+.mainContent .breadCrumbs {
+  margin: 16px;
+}
+.mainContent .mainMenu i {
+  margin-right: 10px;
+  font-size: 22px;
+}
+.mainContent .mainMenu .menuSpan0 {
+  opacity: 0 !important;
+}
+.mainContent .mainMenu .menuSpan1 {
+  opacity: 1 !important;
 }

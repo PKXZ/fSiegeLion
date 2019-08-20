@@ -1,16 +1,16 @@
-/*@charset "utf-8";
+@charset "UTF-8";
 
-@mixin FullScreen{
+.mixin-fullScreen{
   width: 100%;
   height: 100%;
 }
-@mixin omit{
+.mixin-omit{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}*/
+}
 #app{
-@include FullScreen;
+  .mixin-fullScreen;
   overflow: hidden;
 }
 *{
@@ -19,9 +19,9 @@
   margin: 0;
   padding: 0;
 }
-/*html,body{
-@include FullScreen;
-}*/
+html,body,.mainContent{
+  .mixin-fullScreen;
+}
 ul{
   list-style : none;
 }
@@ -34,5 +34,22 @@ a{
 .fr{
   float: right;
 }
+@commonBlue: #1890FF;
+@commonGray: #00000073;
+
+.footer{
+  margin: 0 auto;
+  color: @commonGray;
+  width: 200px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  margin-left: -100px;
+  .ant-col-8,.ant-col-24{
+    text-align: center;
+  }
+}
 
 @import "loginView";
+@import "registerView";
+@import "mainView";
