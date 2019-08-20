@@ -3,7 +3,7 @@ import axios from 'axios'
 /* import qs from 'qs' */
 import store from '../store'
 import router from '../router'
-import { Notification } from 'element-ui'
+import {notification} from 'ant-design-vue'
 
 axios.interceptors.request.use(
   config => {
@@ -39,9 +39,9 @@ axios.interceptors.response.use(
         case 503:
         case 504:
         case 505:
-          Notification({
-            title: errorCode + '错误',
-            message: errorMessage
+          notification({
+            message: errorCode + '错误',
+            description: errorMessage
           });
           break;
         case 401: // token未授权或token授权失败

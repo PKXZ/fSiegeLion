@@ -6,8 +6,8 @@
         <i class="iconfont icon-zhuyefangzi"></i>
         <p>测试echarts</p>
         <div style="width: 500px;height: 500px;" id="myChart"></div>
-        <p>测试elementui</p>
-        <el-button type="primary">我是elementui按钮</el-button>
+        <p>测试ant design</p>
+        <a-button type="primary">我是ant design按钮</a-button>
         <p>测试less</p>
         <span>
             配置less  setting->tools->+ less-> <br>
