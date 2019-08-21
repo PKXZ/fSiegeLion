@@ -51,7 +51,7 @@ a {
   text-align: center;
 }
 /*登录界面css*/
-.mainContent {
+.loginContext {
   background: #F8FAFE;
   margin: 0 auto;
   position: absolute;
@@ -145,12 +145,64 @@ a {
 .mainContent .headers {
   background: #fff;
   padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 20px;
+}
+.mainContent .headers ul {
+  margin-right: 10px;
+}
+.mainContent .headers ul li {
+  float: left;
+}
+.mainContent .headers ul li i {
+  color: #00000073;
+  font-size: 24px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+.mainContent .headers ul li i:hover {
+  color: #1890FF;
+}
+.mainContent .headers ul li .searchIcon {
+  font-size: 26px;
+}
+.mainContent .headers ul .messageIcon {
+  margin-top: 4px;
+}
+.mainContent .headers ul .userList {
+  cursor: pointer;
+  margin-left: 20px;
+}
+.mainContent .headers ul .userList .ant-dropdown-link {
+  width: 100%;
+}
+.mainContent .headers ul .userList .ant-dropdown-link > span {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 50%;
+  background: #1890FF;
+  color: #fff;
+  text-align: center;
+  display: inline-block;
+  margin-right: 5px;
+}
+.mainContent .headers ul .userList .ant-dropdown-link > p {
+  color: #00000073;
+  margin-bottom: 0;
+  display: inline-block;
+}
+.mainContent .headers ul .userList .ant-dropdown-link > i {
+  display: inline-block;
+  margin-left: 0;
 }
 .mainContent .contents {
-  margin: 24px 16px;
+  margin: 0 16px 24px 16px;
   padding: 24px;
   background: #fff;
-  minHeight: 280px;
+  min-height: 280px;
 }
 .mainContent .logo {
   margin: 0 10px;
@@ -177,4 +229,14 @@ a {
 }
 .mainContent .mainMenu .menuSpan1 {
   opacity: 1 !important;
+}
+.questionForm {
+  margin: 10px 0 0 0;
+}
+.questionImg {
+  width: 35px;
+  height: 35px;
+}
+.selNum {
+  color: #1890FF;
 }

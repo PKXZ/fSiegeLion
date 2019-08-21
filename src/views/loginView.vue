@@ -1,6 +1,6 @@
 <template>
     <!--登录界面-->
-    <div class="mainContent">
+    <div class="mainContent loginContext">
         <img src="../assets/img/login2_5D.png" class="loginImg"/>
         <div class="loginBox">
             <div class="loginName">
@@ -105,7 +105,7 @@
                         </a-form-item>
                         <a-form-item>
                             <a-checkbox
-                                    v-decorator="[
+                                v-decorator="[
                                   'remembers',
                                   {
                                     valuePropName: 'checked',

@@ -14,20 +14,27 @@
                 mode="inline"
                 theme="dark"
                 :inlineCollapsed="collapsed"
-                @click="clickMenu"
                 class="mainMenu"
-                v-for="(item, index) in menu" :key="index">
-                <a-menu-item :key="index" v-if="item.children.length <= 0">
-                    <i class="iconfont" :class="item.icon"></i>
-                    <span :class="collapsed ? 'menuSpan0' : 'menuSpan1'">{{item.name}}</span>
-                </a-menu-item>
-                <a-sub-menu :key="index" v-if="item.children.length > 0">
-                    <span slot="title">
-                        <i class="iconfont" :class="item.icon"></i>
-                        <span :class="collapsed ? 'menuSpan0' : 'menuSpan1'">{{item.name}}</span>
-                    </span>
-                    <a-menu-item v-for="(itemChildren,indexs) in item.children" :key="indexs">{{itemChildren.name}}</a-menu-item>
-                </a-sub-menu>
+                @click="clickMenu"
+                :openKeys="openKeys"
+                @openChange="onOpenChange">
+                <template v-for="(item, index) in menu">
+                    <a-menu-item :key="item.id" v-if="item.children.length <= 0">
+                        <router-link :to="'/mainView/' + item.path">
+                            <i class="iconfont" :class="item.icon"></i>
+                            <span :class="collapsed ? 'menuSpan0' : 'menuSpan1'">{{item.name}}</span>
+                        </router-link>
+                    </a-menu-item>
+                    <a-sub-menu :key="item.id" v-else>
+                        <span slot="title">
+                            <i class="iconfont" :class="item.icon"></i>
+                            <span :class="collapsed ? 'menuSpan0' : 'menuSpan1'">{{item.name}}</span>
+                        </span>
+                        <a-menu-item v-for="(itemChildren,indexs) in item.children" :key="itemChildren.id">
+                            <router-link :to="'/mainView/' + itemChildren.path">{{itemChildren.name}}</router-link>
+                        </a-menu-item>
+                    </a-sub-menu>
+                </template>
             </a-menu>
         </a-layout-sider>
         <a-layout>
@@ -35,26 +42,58 @@
                 <a-icon
                     class="trigger"
                     :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-                    @click="()=> collapsed = !collapsed"/>
+                    @click="()=> collapsed = !collapsed">
+                </a-icon>
+                <ul>
+                    <li>
+                        <i class="iconfont icon-search searchIcon"></i>
+                    </li>
+                    <li class="messageIcon">
+                        <a-badge :dot="true">
+                            <i class="iconfont icon-xiaoxi"></i>
+                        </a-badge>
+                    </li>
+                    <li class="userList">
+                        <a-dropdown>
+                            <a class="ant-dropdown-link" href="#">
+                                <span>皮</span>
+                                <p>pikXz</p>
+                                <a-icon type="down" />
+                            </a>
+                            <a-menu slot="overlay">
+                                <a-menu-item>
+                                    <a href="javascript:;">个人信息</a>
+                                </a-menu-item>
+                                <a-menu-item>
+                                    <a href="javascript:;">退出</a>
+                                </a-menu-item>
+                            </a-menu>
+                        </a-dropdown>
+                    </li>
+                </ul>
             </a-layout-header>
             <a-breadcrumb class="breadCrumbs">
-                <a-breadcrumb-item v-for="(item, index) in breadCrumbs">{{item.name}}</a-breadcrumb-item>
+                <a-breadcrumb-item v-for="(item, index) in breadCrumbs" :key="index">{{item.name}}</a-breadcrumb-item>
             </a-breadcrumb>
             <a-layout-content class="contents">
-                Content
+                <router-view/>
             </a-layout-content>
         </a-layout>
     </a-layout>
 </template>
 
 <script>
+    import subMenu from '../components/common/subMenu'
     export default {
         name: "mainView",
         data(){
             return{
                 projectLogo: "icon-shizizuo",
                 projectName: "FSiegeLion",
+                //菜单
                 collapsed: false,
+                rootSubmenuKeys: [1,2,3,4,5],
+                openKeys: [],
                 menu: [
                     {
                         id: 1,
@@ -150,6 +189,7 @@
                         ]
                     },
                 ],
+                //面包屑
                 breadCrumbs: []
             }
         },
@@ -163,13 +203,38 @@
         },
         methods:{
             clickMenu(item){
-                debugger
+                /*@
+                    已知只有两层所以不考虑后续的多层节点情况
+                    如果选中的是第一层,面包屑只用添加这个
+                    如果选中的是第二次,面包屑需要添加出父节点数据
+                */
                 let breadCrumbs = [];
-                for(let i = 0; i < item.keyPath.length; i++){
-                    breadCrumbs = this.menu[item.keyPath[i]];
+                let menuIndex = parseInt(item.item.subMenuKey.split('-')[0]);
+                if(menuIndex > 0){
+                    menuIndex = menuIndex - 1;
+                }
+                const subIndex = item.item.index;
+                if(item.item.level === 1){
+                    //选择的是第一层
+                    breadCrumbs.push(this.menu[menuIndex]);
+                }else {
+                    //选中的是第二层 面包屑需要添加出父节点
+                    breadCrumbs.push(this.menu[menuIndex]);//父节点
+                    breadCrumbs.push(this.menu[menuIndex].children[subIndex]);//当前子节点
                 }
                 this.breadCrumbs = breadCrumbs;
-            }
+            },
+            onOpenChange (openKeys) {
+                const latestOpenKey = openKeys.find(key => this.openKeys.indexOf(key) === -1);
+                if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+                    this.openKeys = openKeys
+                } else {
+                    this.openKeys = latestOpenKey ? [latestOpenKey] : []
+                }
+            },
+        },
+        components:{
+            subMenu
         }
     }
 </script>
