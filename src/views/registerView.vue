@@ -165,7 +165,6 @@
                 projectName: "FSiegeLion",
                 projectDescrpt: 'FSiegeLion是为了前端开发者攻克问题的题库网站',
                 passwordForm: this.$form.createForm(this),
-                phoneForm: this.$form.createForm(this),
             }
         },
         methods:{
@@ -198,6 +197,8 @@
                 });
             },
             loginView(){
+                console.log('表单值');
+                console.log(this.passwordForm.getFieldsValue());
                 this.$router.push({name: 'loginView'});
             }
         },

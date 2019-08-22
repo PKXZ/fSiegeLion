@@ -51,6 +51,36 @@ a{
     text-align: center;
   }
 }
+/*上传图片*/
+.ant-upload-list{
+  height: 104px;
+  margin-right: 8px;
+  margin-bottom: 0;
+}
+.avatar-uploader{
+   > .ant-upload {
+     width: 128px;
+     height: 128px;
+     .ant-upload-list-picture-card{
+       margin-bottom: 0;
+     }
+     .ant-upload-select-picture-card {
+       i {
+         font-size: 32px;
+         color: #999;
+       }
+       .ant-upload-text {
+         margin-top: 8px;
+         margin-bottom: 0;
+         color: #666;
+       }
+     }
+   }
+ }
+.ant-upload.ant-upload-select-picture-card{
+  margin-bottom: 0;
+}
+
 
 @import "loginView";
 @import "registerView";

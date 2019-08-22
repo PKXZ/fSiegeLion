@@ -50,6 +50,31 @@ a {
 .footer .ant-col-24 {
   text-align: center;
 }
+/*上传图片*/
+.ant-upload-list {
+  height: 104px;
+  margin-right: 8px;
+  margin-bottom: 0;
+}
+.avatar-uploader > .ant-upload {
+  width: 128px;
+  height: 128px;
+}
+.avatar-uploader > .ant-upload .ant-upload-list-picture-card {
+  margin-bottom: 0;
+}
+.avatar-uploader > .ant-upload .ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+.avatar-uploader > .ant-upload .ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: #666;
+}
+.ant-upload.ant-upload-select-picture-card {
+  margin-bottom: 0;
+}
 /*登录界面css*/
 .loginContext {
   background: #F8FAFE;
@@ -239,4 +264,29 @@ a {
 }
 .selNum {
   color: #1890FF;
+  margin: 0 5px;
+}
+.questionAlert {
+  margin: 20px 0 10px 0;
+}
+.questionAlert .selEmpty {
+  color: #1890FF;
+  margin: 0 20px;
+}
+.questionAnalysis .imgCol {
+  height: 90px;
+}
+.questionAnalysis .imgCol img {
+  width: 100%;
+  height: 100%;
+}
+.questionAnalysis .questionBt {
+  font-size: 16px;
+  font-weight: bold;
+}
+.questionAnalysis .questionState {
+  display: flex;
+}
+.questionAnalysis .questionADivider {
+  margin-top: 0;
 }

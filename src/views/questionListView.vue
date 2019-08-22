@@ -1,6 +1,6 @@
 <template>
     <div class="mainContent">
-        <a-button type="primary" icon="plus">新增</a-button>
+        <a-button type="primary" icon="plus" @click="addQusetion">新增</a-button>
         <!--表单-->
         <a-form :layout="formLayout" class="questionForm">
             <a-form-item
@@ -14,7 +14,7 @@
                 :label-col="formItemLayout.labelCol"
                 :wrapper-col="formItemLayout.wrapperCol">
                 <a-select :defaultValue="defaultValue" @change="handleChange">
-                    <a-select-option v-for="(item,index) in state" :key="index" :value="item.value" >{{item.name}}</a-select-option>
+                    <a-select-option v-for="(item,index) in stateNum" :key="index" :value="item.value" >{{item.name}}</a-select-option>
                 </a-select>
             </a-form-item>
             <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
@@ -30,18 +30,13 @@
         </a-form>
         <!--表格-->
         <a-alert
-            :message="alertMessge"
             type="info"
-            showIcon>
+            showIcon
+            class="questionAlert">
+            <span slot="message" v-html="alertMessge" @click="selEmpty($event)"></span>
         </a-alert>
-        <!--<div style="margin-bottom: 16px">
-            <span style="margin-left: 8px">
-            <template v-if="hasSelected">
-              {{`Selected ${selectedRowKeys.length} items`}}
-            </template>
-          </span>
-        </div>-->
         <a-table
+             rowKey="id"
             :columns="columns"
             :dataSource="data"
             :loading="loading"
@@ -52,38 +47,45 @@
             <template slot="imgUrl" slot-scope="text, record">
                 <img :src="text" class="questionImg"/>
             </template>
-            <template slot="state" slot-scope="text, record">
-               <template v-if="text === '开放'">
+            <template slot="stateNum" slot-scope="text, record">
+               <template v-if="text === 0">
                    <a-badge status="success"></a-badge>
                </template>
-                <template v-if="text === '关闭'">
+                <template v-if="text === 1">
                     <a-badge status="error"></a-badge>
                 </template>
-                <span>{{text}}</span>
+                <span>{{text === 0 ? '开放' : '关闭'}}</span>
             </template>
             <template slot="operation" slot-scope="text, record">
-                <a href="javascript:;">修改</a>
+                <a href="javascript:;" @click="editorQusetion(text)">修改</a>
                 <a-divider type="vertical" />
                 <a-popconfirm
                     v-if="data.length"
                     title="确认删除?"
-                    @confirm="() => onDelete(record.key)">
+                    @confirm="() => onDelete(record.id)">
                     <a href="javascript:;">删除</a>
                 </a-popconfirm>
                 <a-divider type="vertical" />
-                <a href="javascript:;">数据分析</a>
+                <a href="javascript:;" @click="analysis(text)">数据分析</a>
             </template>
         </a-table>
+
+       <!--新增修改弹窗-->
+       <add-moddify-alert v-if="alertType === 'add' || alertType === 'editor'" :visible="visible" :alertType="alertType" @emitVisible="emitVisible" :queItem="queItem"></add-moddify-alert>
+        <!--数据分析-->
+        <analysis-alert v-if="alertType === 'analysis'" :visible="visible" :alertType="alertType" @emitVisible="emitVisible" :queItem="queItem"></analysis-alert>
     </div>
 </template>
 
 <script>
+    import addModdifyAlert from '../components/default/questionList/addModdifyAlert'
+    import analysisAlert from '../components/default/questionList/analysisAlert'
     export default {
         name: "questionListView",
         data(){
             return{
                 formLayout: 'inline',
-                state:[
+                stateNum:[
                     {
                         name: '开放',
                         value: 0
@@ -98,7 +100,8 @@
                     {
                         title: '题库名称',
                         dataIndex: 'name',
-                        align: 'center'
+                        align: 'center',
+                        sorter: true,
                     }, {
                         title: '题库图标',
                         width: 150,
@@ -109,11 +112,21 @@
                     },  {
                         title: '状态',
                         width: 100,
-                        key: 'state',
-                        scopedSlots: { customRender: 'state' },
-                        dataIndex: 'state',
-                        align: 'center'
+                        key: 'stateNum',
+                        scopedSlots: { customRender: 'stateNum' },
+                        dataIndex: 'stateNum',
+                        align: 'center',
+                        filters: [
+                            { text: '开放', value: '开放' },
+                            { text: '关闭', value: '关闭' },
+                        ],
                     }, {
+                        title: '试题数量',
+                        width: 150,
+                        dataIndex: 'questionNub',
+                        align: 'center',
+                        sorter: true
+                    },  {
                         title: '备注',
                         width: 280,
                         dataIndex: 'note',
@@ -128,53 +141,93 @@
                 ],
                 data: [
                     {
-                        key: 0,
+                        id: 0,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `开放`,
+                        stateNum: 0,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 1,
+                        id: 1,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `关闭`,
+                        stateNum: 1,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 2,
+                        id: 2,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `开放`,
+                        stateNum: 1,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 3,
+                        id: 3,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `关闭`,
+                        stateNum: 1,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 4,
+                        id: 4,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `关闭`,
+                        stateNum: 0,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 5,
+                        id: 5,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `关闭`,
+                        stateNum: 0,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 6,
+                        id: 6,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `关闭`,
+                        stateNum: 0,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     },{
-                        key: 7,
+                        id: 7,
                         name: `2019年Vue.js最新前端面试题库`,
                         imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        state: `关闭`,
+                        stateNum: 0,
+                        questionNub: 20,
                         note: `2019年Vue.js最新前端面试题库`,
+                        createPerson: 'pikaXz',
+                        createTime: '2019年8月22日 17:53',
+                        editorPerson: 'pikaXz',
+                        editorTime: '2019年8月22日 17:53'
                     }
                 ],
                 pageSize: 0,
@@ -191,14 +244,18 @@
                         console.log(current);
                     },
                 },
-                selectedRowKeys: [], // Check here to configure the default column
+                selectedRowKeys: [],
                 loading: false,
-                alertMessge: '当前选择<span class="selNum">0</span>项'
+                alertMessge: '当前选择<span class="selNum">0</span>项 <a href="#" class="selEmpty">清空</a>',
+                /*弹窗*/
+                visible: false,
+                alertType: '',
+                queItem: {}
             }
         },
         watch:{
             selectedRowKeys(newVal,oldVal){
-                this.alertMessge = '当前选择'+ '<span class="selNum">'+ newVal.length + '</span>项';
+                this.alertMessge = '当前选择'+ '<span class="selNum">'+ newVal.length + '</span>项 <a href="#" class="selEmpty">清空</a>';
             }
         },
         computed:{
@@ -214,9 +271,6 @@
                 return formLayout === 'horizontal' ? {
                     wrapperCol: { span: 14, offset: 4 },
                 } : {};
-            },
-            hasSelected() {
-                return this.selectedRowKeys.length > 0
             }
         },
         methods:{
@@ -227,13 +281,45 @@
                 console.log('selectedRowKeys changed: ', selectedRowKeys);
                 this.selectedRowKeys = selectedRowKeys
             },
-            onDelete (key) {
+            onDelete (id) {
                 const dataSource = [...this.data];
-                this.data = dataSource.filter(item => item.key !== key)
+                this.data = dataSource.filter(item => item.id !== id)
             },
             handleTableChange(pagination, filters, sorter) {
                 console.log(pagination, filters, sorter)
+            },
+            selEmpty(event){
+                //清空
+                if(event.target.nodeName === 'A'){
+                    // 获取触发事件对象的属性
+                    console.log('清空');
+                    this.selectedRowKeys = [];
+                }
+            },
+            addQusetion(){
+                this.visible = true;
+                this.alertType = 'add';
+            },
+            editorQusetion(text){
+                this.visible = true;
+                this.alertType = 'editor';
+                this.queItem = text;
+            },
+            analysis(text){
+                //数据分析
+                this.visible = true;
+                this.alertType = 'analysis';
+                this.queItem = text;
+            },
+            emitVisible(visible){
+                //弹窗状态
+                this.visible = visible;
+                this.alertType = '';
             }
+        },
+        components:{
+            addModdifyAlert,
+            analysisAlert
         }
     }
 </script>

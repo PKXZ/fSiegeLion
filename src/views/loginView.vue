@@ -154,7 +154,8 @@
             },
             passwordLogin(e){
                 e.preventDefault();
-                console.log(this.passwordForm);
+                console.log('表单值');
+                console.log(this.passwordForm.getFieldsValue());
                 this.passwordForm.validateFields((err, values) => {
                     if (!err) {
                         console.log('Received values of form: ', values);
@@ -164,6 +165,8 @@
             },
             phoneLogin(e){
                 e.preventDefault();
+                console.log('表单值');
+                console.log(this.phoneForm.getFieldsValue());
                 this.phoneForm.validateFields((err, values) => {
                     if (!err) {
                         console.log('Received values of form: ', values);
