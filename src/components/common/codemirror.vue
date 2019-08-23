@@ -29,23 +29,14 @@
             return {
                 code: 'const a = 10',
                 cmOptions: {
-                    tabSize: 4,//缩进格式
+                    tabSize: 4,// Tab缩进，默认4
+                    indentUnit : 2,  // 缩进单位，默认2
                     mode: 'text/javascript',//默认语法类型
                     theme: 'base16-dark',
                     lineNumbers: true,//显示行号
                     line: true,//显示行号
-                    indentWithTabs: true,
-                    smartIndent: true,
-                    matchBrackets: true,
-                    //theme: theme,
-                    // autofocus: true,
-                    extraKeys: {'Ctrl': 'autocomplete'},//自定义快捷键
-                    hintOptions: {//自定义提示选项
-                        tables: {
-                            users: ['name', 'score', 'birthDate'],
-                            countries: ['name', 'population', 'size']
-                        }
-                    }
+                    smartIndent : true,  // 是否智能缩进
+                    readOnly : false,  // 是否只读，默认false
                     // more codemirror options, 更多 codemirror 的高级配置...
                 },
                 modes: [{
