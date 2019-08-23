@@ -10,6 +10,21 @@ Vue.use(antDesignVue);
 import echarts from 'echarts'
 import 'echarts/theme/macarons.js'
 Vue.prototype.$echarts = echarts;
+/*颜色选择器插件*/
+import vcolorpicker from 'vcolorpicker'
+Vue.use(vcolorpicker);
+/*在线代码编辑器*/
+// require lib
+import VueCodemirror from 'vue-codemirror'
+// require styles
+import 'codemirror/lib/codemirror.css'
+// require more codemirror resource...
+
+// you can set default global options and events when use
+Vue.use(VueCodemirror, /* {
+  options: { theme: 'base16-dark', ... },
+  events: ['scroll', ...]
+} */)
 
 import axios from './config/axiosConfig'
 import baseUrl from './config/api';

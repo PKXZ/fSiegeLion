@@ -107,7 +107,6 @@
             return{
                 confirmLoading: false,
                 /*表单*/
-                checkNick: false,
                 form: this.$form.createForm(this),
                 formItemLayout: {
                     labelCol: { span: 4 },

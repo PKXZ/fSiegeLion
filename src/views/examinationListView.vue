@@ -61,6 +61,9 @@
             <template slot="eType" slot-scope="text, record">
                 <span>{{eType[text].name}}</span>
             </template>
+            <template slot="eTags" slot-scope="text, record">
+                <a-tag v-for="(item,index) in text" :color="item.color" :key="index">{{item.text}}</a-tag>
+            </template>
             <template slot="eStateNum" slot-scope="text, record">
                 <template v-if="text === 0">
                     <a-badge status="success"></a-badge>
@@ -106,8 +109,8 @@
             return{
                 formLayout: 'inline',
                 dropdownMatchSelectWidth: false,
-                examinationForm: this.$form.createForm(this),
                 allowClear: true,
+                examinationForm: this.$form.createForm(this),
                 qName: [
                     {
                         name: '2019年Vue.js最新前端面试题库',
@@ -172,7 +175,6 @@
                 eStateNumPl: '请选择试题状态',
                 eTypePl: '请选择试题类型',
                 eDifficultyPl: '请选择试题难度',
-                notFoundContent: '请选择试题难度',
                 /*表格*/
                 columns: [
                     {
@@ -205,6 +207,13 @@
                         dataIndex: 'qName',
                         align: 'center',
                         sorter: true,
+                    },{
+                        title: '试题标签',
+                        width: 150,
+                        dataIndex: 'eTags',
+                        key: 'eTags',
+                        scopedSlots: { customRender: 'eTags' },
+                        align: 'center'
                     },{
                         title: '试题状态',
                         width: 150,
@@ -266,7 +275,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 1,
                         qName: `2019年Vue.js最新前端面试题库2`,
@@ -276,7 +295,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 2,
                         qName: `2019年Vue.js最新前端面试题库3`,
@@ -286,7 +315,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 3,
                         qName: `2019年Vue.js最新前端面试题库4`,
@@ -296,7 +335,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 4,
                         qName: `2019年Vue.js最新前端面试题库5`,
@@ -306,7 +355,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 5,
                         qName: `2019年Vue.js最新前端面试题库6`,
@@ -316,7 +375,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 6,
                         qName: `2019年Vue.js最新前端面试题库7`,
@@ -326,7 +395,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     },{
                         id: 7,
                         qName: `2019年Vue.js最新前端面试题库8`,
@@ -336,7 +415,17 @@
                         eCreatePerson: 'pikaXz',
                         eCreateTime: '2019年8月22日 17:53',
                         eEditorPerson: 'pikaXz',
-                        eEditorTime: '2019年8月22日 17:53'
+                        eEditorTime: '2019年8月22日 17:53',
+                        eTags: [
+                            {
+                                text: 'vue.js',
+                                color: '#87d068'
+                            },{
+                                text: 'react.js',
+                                color: '#f50'
+                            }
+                        ],
+                        eSource: 'www.baidu.com'
                     }
                 ],
                 pageSize: 0,
