@@ -1,7 +1,6 @@
 <template>
-    <!--新增，修改题库-->
     <a-modal
-        :title="alertType === 'add' ? '新增题库' : '修改题库'"
+        title="预览试题"
         :visible="visible"
         :confirmLoading="confirmLoading"
         @ok="handleOk"
@@ -12,14 +11,14 @@
 
 <script>
     export default {
-        name: "addModdifyAlert",
-        props:{
-            visible:{
+        name: "previewExamination",
+        props: {
+            visible: {
                 //弹窗显示或隐藏
                 type: Boolean,
                 default: false
             },
-            alertType:{
+            alertType: {
                 //弹窗类型
                 type: String,
                 default: 'add'

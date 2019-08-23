@@ -8,6 +8,7 @@ import 'ant-design-vue/dist/antd.css';
 Vue.use(antDesignVue);
 
 import echarts from 'echarts'
+import 'echarts/theme/macarons.js'
 Vue.prototype.$echarts = echarts;
 
 import axios from './config/axiosConfig'

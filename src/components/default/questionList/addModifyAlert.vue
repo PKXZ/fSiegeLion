@@ -13,10 +13,10 @@
                 label="题库名称">
                 <a-input
                     v-decorator="[
-                      'name',
+                      'qName',
                       {
                       rules: [{ required: true, message: '请输入题库名称' }],
-                      initialValue: queItem.name
+                      initialValue: queItem.qName
                       }
                     ]"
                     placeholder="请输入题库名称"/>
@@ -34,10 +34,10 @@
                         @preview="handlePreview"
                         @change="handleChange"
                         v-decorator="[
-                          'imgUrl',
+                          'qImgUrl',
                           {
                             rules: [{ required: true, message: '请上传题库图标' }],
-                            initialValue: queItem.imgUrl
+                            initialValue: queItem.qImgUrl
                           }
                         ]">
                         <div v-if="fileList.length < 1">
@@ -58,11 +58,11 @@
                     checkedChildren="开"
                     unCheckedChildren="关"
                     v-decorator="[
-                      'stateNum',
+                      'qStateNum',
                       {
                         rules: [{ required: true, message: '请选择题库状态' }],
-                        valuePropName: !queItem ? 'checked' : queItem.stateNum === 0 ? 'checked' : 'checked:false',
-                        initialValue: !queItem ? 'checked' : queItem.stateNum === 0 ? 'checked' : 'checked:false'
+                        valuePropName: !queItem ? 'checked' : queItem.qStateNum === 0 ? 'checked' : 'checked:false',
+                        initialValue: !queItem ? 'checked' : queItem.qStateNum === 0 ? 'checked' : 'checked:false'
                       },
                     ]">
                 </a-switch>
@@ -74,8 +74,8 @@
                 <a-textarea
                     :rows="4"
                     v-decorator="[
-                        'note',
-                        {initialValue: queItem.note}
+                        'qNote',
+                        {initialValue: queItem.qNote}
                     ]"
                     placeholder="请输入题库备注">
                 </a-textarea>
@@ -128,7 +128,7 @@
                         uid: '-1',
                         name: 'xxx.png',
                         status: 'done',
-                        url: this.queItem.imgUrl
+                        url: this.queItem.qImgUrl
                     }
                 ]
             }

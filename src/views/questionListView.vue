@@ -2,28 +2,28 @@
     <div class="mainContent">
         <a-button type="primary" icon="plus" @click="addQusetion">新增</a-button>
         <!--表单-->
-        <a-form :layout="formLayout" class="questionForm">
+        <a-form :layout="formLayout" class="horizForm" :form="questionForm">
             <a-form-item
                 label="题库名称"
                 :label-col="formItemLayout.labelCol"
                 :wrapper-col="formItemLayout.wrapperCol">
-                <a-input placeholder="请输入题库名称" />
+                <a-input placeholder="请输入题库名称" v-decorator="['qName']"/>
             </a-form-item>
             <a-form-item
                 label="状态"
                 :label-col="formItemLayout.labelCol"
                 :wrapper-col="formItemLayout.wrapperCol">
-                <a-select :defaultValue="defaultValue" @change="handleChange">
-                    <a-select-option v-for="(item,index) in stateNum" :key="index" :value="item.value" >{{item.name}}</a-select-option>
+                <a-select :initialValue="qstateNumDV" @change="handleChange" v-decorator="['qstateNum']" :placeholder="qstateNumPl" :allowClear="allowClear" :dropdownMatchSelectWidth="dropdownMatchSelectWidth">
+                    <a-select-option v-for="(item,index) in qstateNum" :key="index" :value="item.value" >{{item.name}}</a-select-option>
                 </a-select>
             </a-form-item>
             <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
-                <a-button type="primary">
+                <a-button type="primary" @click="serchForm">
                     查询
                 </a-button>
             </a-form-item>
             <a-form-item :wrapper-col="buttonItemLayout.wrapperCol">
-                <a-button>
+                <a-button @click="resetForm">
                     重置
                 </a-button>
             </a-form-item>
@@ -32,7 +32,7 @@
         <a-alert
             type="info"
             showIcon
-            class="questionAlert">
+            class="commonAlert">
             <span slot="message" v-html="alertMessge" @click="selEmpty($event)"></span>
         </a-alert>
         <a-table
@@ -44,10 +44,10 @@
             :pagination="pagination"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
-            <template slot="imgUrl" slot-scope="text, record">
+            <template slot="qImgUrl" slot-scope="text, record">
                 <img :src="text" class="questionImg"/>
             </template>
-            <template slot="stateNum" slot-scope="text, record">
+            <template slot="qStateNum" slot-scope="text, record">
                <template v-if="text === 0">
                    <a-badge status="success"></a-badge>
                </template>
@@ -70,22 +70,23 @@
             </template>
         </a-table>
 
-       <!--新增修改弹窗-->
-       <add-moddify-alert v-if="alertType === 'add' || alertType === 'editor'" :visible="visible" :alertType="alertType" @emitVisible="emitVisible" :queItem="queItem"></add-moddify-alert>
+        <!--新增修改弹窗-->
+        <add-modify-alert v-if="alertType === 'add' || alertType === 'editor'" :visible="visible" :alertType="alertType" @emitVisible="emitVisible" :queItem="queItem"></add-modify-alert>
         <!--数据分析-->
         <analysis-alert v-if="alertType === 'analysis'" :visible="visible" :alertType="alertType" @emitVisible="emitVisible" :queItem="queItem"></analysis-alert>
     </div>
 </template>
 
 <script>
-    import addModdifyAlert from '../components/default/questionList/addModdifyAlert'
+    import addModifyAlert from '../components/default/questionList/addModifyAlert'
     import analysisAlert from '../components/default/questionList/analysisAlert'
     export default {
         name: "questionListView",
         data(){
             return{
                 formLayout: 'inline',
-                stateNum:[
+                questionForm: this.$form.createForm(this),
+                qstateNum:[
                     {
                         name: '开放',
                         value: 0
@@ -94,27 +95,30 @@
                         value: 1
                     }
                 ],
-                defaultValue: '开放',
+                qstateNumDV: '',
+                qstateNumPl: '请选择题库状态',
+                dropdownMatchSelectWidth: false,
+                allowClear: true,
                 /*表格*/
                 columns: [
                     {
                         title: '题库名称',
-                        dataIndex: 'name',
+                        dataIndex: 'qName',
                         align: 'center',
                         sorter: true,
                     }, {
                         title: '题库图标',
                         width: 150,
-                        key: 'imgUrl',
-                        scopedSlots: { customRender: 'imgUrl' },
-                        dataIndex: 'imgUrl',
+                        key: 'qImgUrl',
+                        scopedSlots: { customRender: 'qImgUrl' },
+                        dataIndex: 'qImgUrl',
                         align: 'center'
                     },  {
-                        title: '状态',
-                        width: 100,
-                        key: 'stateNum',
-                        scopedSlots: { customRender: 'stateNum' },
-                        dataIndex: 'stateNum',
+                        title: '题库状态',
+                        width: 150,
+                        key: 'qStateNum',
+                        scopedSlots: { customRender: 'qStateNum' },
+                        dataIndex: 'qStateNum',
                         align: 'center',
                         filters: [
                             { text: '开放', value: '开放' },
@@ -123,13 +127,13 @@
                     }, {
                         title: '试题数量',
                         width: 150,
-                        dataIndex: 'questionNub',
+                        dataIndex: 'eNub',
                         align: 'center',
                         sorter: true
                     },  {
                         title: '备注',
                         width: 280,
-                        dataIndex: 'note',
+                        dataIndex: 'qNote',
                         align: 'center'
                     }, {
                         title: '操作',
@@ -142,92 +146,92 @@
                 data: [
                     {
                         id: 0,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 0,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 1,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 1,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 2,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 1,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 3,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 1,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 4,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 0,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 5,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 0,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 6,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 0,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     },{
                         id: 7,
-                        name: `2019年Vue.js最新前端面试题库`,
-                        imgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
-                        stateNum: 0,
-                        questionNub: 20,
-                        note: `2019年Vue.js最新前端面试题库`,
-                        createPerson: 'pikaXz',
-                        createTime: '2019年8月22日 17:53',
-                        editorPerson: 'pikaXz',
-                        editorTime: '2019年8月22日 17:53'
+                        qName: `2019年Vue.js最新前端面试题库`,
+                        qImgUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566386054475&di=5318acb9f716efea5a50a20565e3c267&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fq_70%2Cc_zoom%2Cw_640%2Fimages%2F20180622%2Ff16fcd0b55454535be73cc603d50dbdd.jpeg',
+                        qStateNum: 0,
+                        eNub: 20,
+                        qNote: `2019年Vue.js最新前端面试题库`,
+                        qCreatePerson: 'pikaXz',
+                        qCreateTime: '2019年8月22日 17:53',
+                        qEditorPerson: 'pikaXz',
+                        qEditorTime: '2019年8月22日 17:53'
                     }
                 ],
                 pageSize: 0,
@@ -246,7 +250,7 @@
                 },
                 selectedRowKeys: [],
                 loading: false,
-                alertMessge: '当前选择<span class="selNum">0</span>项 <a href="#" class="selEmpty">清空</a>',
+                alertMessge: '当前选择<span class="selNum">0</span>项 <a href="#" class="selEmpty" id="del">批量删除</a><a href="#" class="selEmpty" id="clear">清空</a>',
                 /*弹窗*/
                 visible: false,
                 alertType: '',
@@ -255,7 +259,7 @@
         },
         watch:{
             selectedRowKeys(newVal,oldVal){
-                this.alertMessge = '当前选择'+ '<span class="selNum">'+ newVal.length + '</span>项 <a href="#" class="selEmpty">清空</a>';
+                this.alertMessge = '当前选择'+ '<span class="selNum">'+ newVal.length + '</span>项 <a href="#" class="selEmpty" id="del">批量删除</a><a href="#" class="selEmpty" id="clear">清空</a>';
             }
         },
         computed:{
@@ -291,9 +295,14 @@
             selEmpty(event){
                 //清空
                 if(event.target.nodeName === 'A'){
-                    // 获取触发事件对象的属性
-                    console.log('清空');
-                    this.selectedRowKeys = [];
+                    if(event.target.id === 'clear'){
+                        // 获取触发事件对象的属性
+                        console.log('清空');
+                        this.selectedRowKeys = [];
+                    }
+                    if(event.target.id === 'del'){
+                        console.log('批量删除');
+                    }
                 }
             },
             addQusetion(){
@@ -315,15 +324,22 @@
                 //弹窗状态
                 this.visible = visible;
                 this.alertType = '';
+            },
+            serchForm(){
+                console.log('查询');
+                console.log(this.questionForm.getFieldsValue());
+            },
+            resetForm(){
+                this.questionForm.resetFields();
             }
         },
         components:{
-            addModdifyAlert,
+            addModifyAlert,
             analysisAlert
         }
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>
