@@ -14,17 +14,12 @@ Vue.prototype.$echarts = echarts;
 import vcolorpicker from 'vcolorpicker'
 Vue.use(vcolorpicker);
 /*在线代码编辑器*/
-// require lib
-import VueCodemirror from 'vue-codemirror'
-// require styles
+/*import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
-// require more codemirror resource...
-
-// you can set default global options and events when use
-Vue.use(VueCodemirror, /* {
-  options: { theme: 'base16-dark', ... },
-  events: ['scroll', ...]
-} */)
+Vue.use(VueCodemirror);*/
+/*ckeditor*/
+import CKEditor from '@ckeditor/ckeditor5-vue';
+Vue.use( CKEditor );
 
 import axios from './config/axiosConfig'
 import baseUrl from './config/api';

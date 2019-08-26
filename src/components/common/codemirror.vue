@@ -10,9 +10,9 @@
            @focus="onCmFocus"
            @input="onCmCodeChange">
        </codemirror>
-       <select v-for="(item,index) in modes" :key="index">
-           <option :value="item.value">{{item.label}}</option>
-       </select>
+       <a-select defaultValue="javascript" style="width: 120px" @change="theme">
+           <a-select-option v-for="(item,index) in modes" :key="index" :value="item.value">{{item.label}}</a-select-option>
+       </a-select>
    </div>
 
 </template>
@@ -20,8 +20,18 @@
 <script>
     // language js
     import 'codemirror/mode/javascript/javascript.js'
+    import 'codemirror/mode/css/css.js'
+    import 'codemirror/mode/xml/xml.js'
+    import 'codemirror/mode/clike/clike.js'
+    import 'codemirror/mode/markdown/markdown.js'
+    import 'codemirror/mode/python/python.js'
+    import 'codemirror/mode/r/r.js'
+    import 'codemirror/mode/shell/shell.js'
+    import 'codemirror/mode/sql/sql.js'
+    import 'codemirror/mode/swift/swift.js'
+    import 'codemirror/mode/vue/vue.js'
     // theme css
-    import 'codemirror/theme/base16-dark.css'
+    //import 'codemirror/theme/base16-dark.css'
     // more codemirror resources
     // import 'codemirror/some-resource...'
     export default {
@@ -31,51 +41,65 @@
                 cmOptions: {
                     tabSize: 4,// Tab缩进，默认4
                     indentUnit : 2,  // 缩进单位，默认2
-                    mode: 'text/javascript',//默认语法类型
-                    theme: 'base16-dark',
+                    mode: 'javascript',//默认语法类型
+                    //theme: 'base16-dark',
                     lineNumbers: true,//显示行号
                     line: true,//显示行号
-                    smartIndent : true,  // 是否智能缩进
-                    readOnly : false,  // 是否只读，默认false
-                    // more codemirror options, 更多 codemirror 的高级配置...
+                    smartIndent : true,// 是否智能缩进
+                    readOnly : false,// 是否只读，默认false
+                    lineWrapping: true,//是否代码折叠
+                    matchBrackets : true,//括号匹配
+                    styleActiveLine: true, // 当前行背景高亮
+                    spellcheck: true,//是否启用输入验证
                 },
-                modes: [{
-                    value: 'css',
-                    label: 'CSS'
-                }, {
-                    value: 'javascript',
-                    label: 'Javascript'
-                }, {
-                    value: 'html',
-                    label: 'XML/HTML'
-                }, {
-                    value: 'x-java',
-                    label: 'Java'
-                }, {
-                    value: 'x-objectivec',
-                    label: 'Objective-C'
-                }, {
-                    value: 'x-python',
-                    label: 'Python'
-                }, {
-                    value: 'x-rsrc',
-                    label: 'R'
-                }, {
-                    value: 'x-sh',
-                    label: 'Shell'
-                }, {
-                    value: 'x-sql',
-                    label: 'SQL'
-                }, {
-                    value: 'x-swift',
-                    label: 'Swift'
-                }, {
-                    value: 'x-vue',
-                    label: 'Vue'
-                }, {
-                    value: 'markdown',
-                    label: 'Markdown'
-                }]
+                modes: [
+                    {
+                        value: 'css',
+                        label: 'CSS'
+                    }, {
+                        value: 'javascript',
+                        label: 'Javascript'
+                    }, {
+                        value: 'html',
+                        label: 'XML/HTML'
+                    }, {
+                        value: 'x-java',
+                        label: 'Java'
+                    }, {
+                        value: 'x-objectivec',
+                        label: 'Objective-C'
+                    }, {
+                        value: 'x-python',
+                        label: 'Python'
+                    }, {
+                        value: 'x-rsrc',
+                        label: 'R'
+                    }, {
+                        value: 'x-sh',
+                        label: 'Shell'
+                    }, {
+                        value: 'x-sql',
+                        label: 'SQL'
+                    }, {
+                        value: 'x-swift',
+                        label: 'Swift'
+                    }, {
+                        value: 'x-vue',
+                        label: 'Vue'
+                    }, {
+                        value: 'markdown',
+                        label: 'Markdown'
+                    }
+                ]
+            }
+        },
+        watch:{
+            cmOptions:{
+                handler(curVal,oldVal){
+                    this.cmOptions = curVal;
+                    console.log('对象'+JSON.stringify(this.cmOptions));
+                },
+                deep: true
             }
         },
         methods: {
@@ -87,7 +111,11 @@
             },
             onCmCodeChange(newCode) {
                 console.log('this is new code', newCode)
-                this.code = newCode
+                this.code = newCode;
+                console.log(this.$refs.myCm.codemirror.getValue())
+            },
+            theme(value){
+                this.cmOptions.mode = value;
             }
         },
         computed: {

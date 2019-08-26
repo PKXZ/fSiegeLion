@@ -116,7 +116,7 @@
                  </a-form>
             </div>
             <div class="steps-content stepContent" v-show="current === 1">
-                <codemirror></codemirror>
+                <ckeditor5></ckeditor5>
             </div>
             <div class="steps-action stepAction">
                 <a-button v-if="current < steps.length - 1" type="primary" @click="next">下一步</a-button>
@@ -128,7 +128,7 @@
 </template>
 
 <script>
-    import codemirror from '../../../components/common/codemirror'
+    import ckeditor5 from '../../../components/common/ckedtor5'
     export default {
         name: "addModdifyAlert",
         props:{
@@ -246,7 +246,7 @@
                 ],
                 inputVisible: false,
                 inputValue: '',
-                colorValidateStatus: ''
+                colorValidateStatus: '',
             }
         },
         mounted(){
@@ -338,7 +338,7 @@
             }
         },
         components:{
-            codemirror
+            ckeditor5
         }
     }
 </script>
