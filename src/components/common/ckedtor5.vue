@@ -1,22 +1,29 @@
 <template>
     <div>
-        <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+        <!--<ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>-->
+        <!-- 工具栏容器 -->
+        <div id="toolbar-container"></div>
+
+        <!-- 编辑器容器 -->
+        <div id="editor">
+            <p>This is the initial editor content.</p>
+        </div>
     </div>
 </template>
 
 <script>
-    import '@ckeditor/ckeditor5-build-classic/build/translations/zh-cn'
-   /* import ClassicEditor from '@ckeditor/ckeditor5-build-classic/src/';
-    import '@ckeditor/ckeditor5-build-classic/build/translations/zh-cn'
+    //import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+    //import '@ckeditor/ckeditor5-build-classic/build/translations/zh-cn'
+    import CKEditor from '@ckeditor/ckeditor5-build-classic/build/ckeditor'
     //文本样式
-    import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
+    /* import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
     import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
     import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline';
     import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
     import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
     import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript';
     import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';*/
-    import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+    /*import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
     import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
     import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
     import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
@@ -29,23 +36,18 @@
    import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
    import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
    import Subscript from '@ckeditor/ckeditor5-basic-styles/src/subscript';
-   import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';
+   import Superscript from '@ckeditor/ckeditor5-basic-styles/src/superscript';*/
     export default {
         name: "ckedtor5",
         data(){
             return{
-                editor: ClassicEditor,
+                editor:null,//编辑器实例
+
+               /* editor: ClassicEditor,
                 editorData: '<p>Content of the editor.</p>',
                 editorConfig: {
-                    plugins: [
-                        EssentialsPlugin,
-                        BoldPlugin,
-                        ItalicPlugin,
-                        LinkPlugin,
-                        ParagraphPlugin,
-
-                    ],
-                    toolbar: {
+                    language: 'zh-cn',//语言包
+                    /!*toolbar: {
                         items: [
                             'Bold',
                             'Italic',
@@ -55,8 +57,8 @@
                             'Subscript',//下标
                             'Superscript',//上标
                         ]
-                    }
-                },
+                    }*!/
+                },*/
                 /*editorConfig: {
                     language: 'zh-cn',//语言包
                     //plugins: [ Bold,Italic,Underline, Strikethrough, Code ,Subscript,Superscript],
@@ -90,9 +92,30 @@
             }
         },
         mounted() {
+            this.initCKEditor();
         },
         methods: {
-
+            initCKEditor() {
+                /*CKEditor.create(document.querySelector('#editor'), {
+                    ckfinder: {
+                        uploadUrl: '/admin/Upload/uploadUrl'
+                        //后端处理上传逻辑返回json数据,包括uploaded(选项true/false)和url两个字段
+                    }
+                }).then(editor => {
+                    const toolbarContainer = document.querySelector('#toolbar-container');
+                    toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+                    this.editor = editor //将编辑器保存起来，用来随时获取编辑器中的内容等，执行一些操作
+                }).catch(error => {
+                    console.error(error);
+                });*/
+                CKEditor.create( document.getElementById( 'editor' ) )
+                    .then( editor => {
+                        // ...
+                    } )
+                    .catch( error => {
+                        console.error( error );
+                    } );
+            }
         }
     }
 </script>

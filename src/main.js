@@ -18,8 +18,8 @@ Vue.use(vcolorpicker);
 import 'codemirror/lib/codemirror.css'
 Vue.use(VueCodemirror);*/
 /*ckeditor*/
-import CKEditor from '@ckeditor/ckeditor5-vue';
-Vue.use( CKEditor );
+/*import CKEditor from '@ckeditor/ckeditor5-vue';
+Vue.use( CKEditor );*/
 
 import axios from './config/axiosConfig'
 import baseUrl from './config/api';
