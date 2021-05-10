@@ -13,7 +13,7 @@
     "codemirror": "^5.48.4",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "lodash.defaultsdeep": "^4.6.1",
     "vcolorpicker": "^0.1.8",
     "vue": "^2.6.10",
